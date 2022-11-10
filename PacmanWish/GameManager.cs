@@ -13,7 +13,7 @@ namespace PacmanWish
         public Pacman pacman { get; set; }
         public Ghost[] ghosts { get; set; }
 
-        public static Tile[,] board = new Tile[28, 32]; // static not definitive
+        public static Tile[,] board = new Tile[28, 32]; // static argument not definitive
         public Tile[,] Board
         {
             get { return board; }
