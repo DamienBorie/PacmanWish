@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace PacmanWish
 {
-    internal class Program
+    public class Pacman
     {
-        static void Main(string[] args)
-        {
-           
-        }
     }
 }
