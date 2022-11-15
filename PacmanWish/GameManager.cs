@@ -77,7 +77,7 @@ namespace PacmanWish
         }
         public void LoopPlayer()
         {
-            while(pacman.Position.GhostEating == false)
+            while (pacman.Position.GhostEating(ghosts) == false)
             {
                 Console.Clear();
                 DisplayBoard();
@@ -364,6 +364,20 @@ namespace PacmanWish
                 }
             }
             board[17, 14].coin = false;
+
+            //nodes
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (int j = 0; j < board.GetLength(1) / 2; j++)
+                {
+                    bool nodesHere = (i == 4 && (j == 7 || j == 9 || j == 12)) || (i == 6 && j == 4) || (i == 8 && (j == 9 || j == 12)) || (i == 9 && j == 4) || (i == 11 && (j == 6 || j == 9 || j == 13)) || (i == 14 && (j == 1 || j == 4)) || (i == 15 && j == 13) || (i == 17 && (j == 6 || j == 9 || j == 12)) || (i == 20 && (j == 3 || j == 6)) || (i == 23 && (j == 9 || j == 12)) || (i == 26 && (j == 1 || j == 6));
+                    if (nodesHere == true)
+                    {
+                        board[i, j].node = true;
+                        board[i, board.GetLength(1) - 1 - j].node = true;
+                    }
+                }
+            }
 
         }
         public void DisplayBoard()

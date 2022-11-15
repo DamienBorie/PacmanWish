@@ -8,9 +8,9 @@ namespace PacmanWish
 {
     public class Tile
     {
-        public bool node { get; private set; }
+        public bool node { get; set; }
         public bool coin { get; set; }
-        public bool wall { get;  set; }
+        public bool wall { get; set; }
         public bool ghostHere { get; set; }
         public bool pacmanHere { get; set; }
 
