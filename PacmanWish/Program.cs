@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace PacmanWish
 {
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-           
+            Console.SetWindowSize(Console.LargestWindowWidth/2, Console.LargestWindowHeight - Console.LargestWindowHeight/4);
+            GameManager game = new GameManager();
         }
     }
 }

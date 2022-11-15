@@ -8,5 +8,13 @@ namespace PacmanWish
 {
     public class Pacman
     {
+        public string Name { get; private set; }
+        public Position Position { get; set; }
+        public Pacman() 
+        {
+            Name = "pacman";
+            Position = new Position();
+        }
+
     }
 }

@@ -14,20 +14,20 @@ namespace PacmanWish
             switch(input)
             {
                 case 'z':
-                    return new Position(CurrentPosition.row - 1, CurrentPosition.column);
+                    return new Position(CurrentPosition.Row - 1, CurrentPosition.Column);
                 case 's':
-                    return new Position(CurrentPosition.row +1, CurrentPosition.column);
+                    return new Position(CurrentPosition.Row +1, CurrentPosition.Column);
                 case 'q':
-                    return new Position(CurrentPosition.row, CurrentPosition.column -1);
-                case 'd':
-                    return new Position(CurrentPosition.row , CurrentPosition.column +1);
+                    return new Position(CurrentPosition.Row, CurrentPosition.Column -1);
+                case 'd':   
+                    return new Position(CurrentPosition.Row , CurrentPosition.Column +1);
                 default:
                     return null;
             }
         }
         public static bool PossibleShift(Position position)
         {
-            if (GameManager.board[position.row, position.column].wall)
+            if (GameManager.board[position.Row, position.Column].wall)
             {
                 return false;
             }

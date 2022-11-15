@@ -8,5 +8,13 @@ namespace PacmanWish
 {
     public class Ghost
     {
+        public string Name { get; set; }
+        public Position Position { get; set; }
+
+        public Ghost(string name)
+        {
+            Name = name;
+            Position = new Position();
+        }
     }
 }
