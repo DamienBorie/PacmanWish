@@ -85,14 +85,17 @@ namespace PacmanWish
         }
         public void LoopPlayer()
         {
+            //Start Ghosts thread
+            new Thread(GhostBehavior1).Start();
+            new Thread(GhostBehavior2).Start();
+            new Thread(GhostBehavior3).Start();
+            new Thread(GhostBehavior4).Start();
+
             while (pacman.Position.GhostEating(ghosts) == false)
             {
                 Console.Clear();
                 Console.WriteLine("Score : " + score + "\nLives : " + lives + "\n");
                 DisplayBoard();
-
-                //Ghosts
-
 
                 //Pacman
                 ConsoleKeyInfo cki = new ConsoleKeyInfo();
@@ -130,9 +133,85 @@ namespace PacmanWish
             }
             DecreaseLives();
         }
-        public void GhostBehavior()
+        public void GhostBehavior4()
         {
+            Movement movement = new Movement(' ');
+            Random rdm = new Random();
+            char[] directions = { 'z', 'q', 's', 'd' };
+            do
+            {
+                do
+                {
+                    movement.direction = directions[rdm.Next(4)];
+                } while (movement.PossibleShift(movement.NextPosition(ghosts[3].Position)) == false);
 
+                do
+                {
+                    //Console.WriteLine(ghosts[0].Name + " : " + movement.direction + " : " + ghosts[0].Position.Row + " ; " + ghosts[0].Position.Column);
+                    SetPosition(ghosts[3].Name, movement.NextPosition(ghosts[3].Position));
+                    Thread.Sleep(200);
+                } while (board[ghosts[3].Position.Row, ghosts[3].Position.Column].node == false && movement.PossibleShift(movement.NextPosition(ghosts[3].Position)) == true);
+            } while (pacman.Position.GhostEating(ghosts) == false);
+        }
+        public void GhostBehavior3()
+        {
+            Movement movement = new Movement(' ');
+            Random rdm = new Random();
+            char[] directions = { 'z', 'q', 's', 'd' };
+            do
+            {
+                do
+                {
+                    movement.direction = directions[rdm.Next(4)];
+                } while (movement.PossibleShift(movement.NextPosition(ghosts[2].Position)) == false);
+
+                do
+                {
+                    //Console.WriteLine(ghosts[0].Name + " : " + movement.direction + " : " + ghosts[0].Position.Row + " ; " + ghosts[0].Position.Column);
+                    SetPosition(ghosts[2].Name, movement.NextPosition(ghosts[2].Position));
+                    Thread.Sleep(300);
+                } while (board[ghosts[2].Position.Row, ghosts[2].Position.Column].node == false && movement.PossibleShift(movement.NextPosition(ghosts[2].Position)) == true);
+            } while (pacman.Position.GhostEating(ghosts) == false);
+        }
+        public void GhostBehavior2()
+        {
+            Movement movement = new Movement(' ');
+            Random rdm = new Random();
+            char[] directions = { 'z', 'q', 's', 'd' };
+            do
+            {
+                do
+                {
+                    movement.direction = directions[rdm.Next(4)];
+                } while (movement.PossibleShift(movement.NextPosition(ghosts[1].Position)) == false);
+
+                do
+                {
+                    //Console.WriteLine(ghosts[0].Name + " : " + movement.direction + " : " + ghosts[0].Position.Row + " ; " + ghosts[0].Position.Column);
+                    SetPosition(ghosts[1].Name, movement.NextPosition(ghosts[1].Position));
+                    Thread.Sleep(400);
+                } while (board[ghosts[1].Position.Row, ghosts[1].Position.Column].node == false && movement.PossibleShift(movement.NextPosition(ghosts[1].Position)) == true);
+            } while (pacman.Position.GhostEating(ghosts) == false);
+        }
+        public void GhostBehavior1()
+        {
+            Movement movement = new Movement(' ');
+            Random rdm = new Random();
+            char[] directions = { 'z', 'q', 's', 'd' };
+            do
+            {
+                do
+                {
+                    movement.direction = directions[rdm.Next(4)];
+                } while (movement.PossibleShift(movement.NextPosition(ghosts[0].Position)) == false);
+
+                do
+                {
+                    //Console.WriteLine(ghosts[0].Name + " : " + movement.direction + " : " + ghosts[0].Position.Row + " ; " + ghosts[0].Position.Column);
+                    SetPosition(ghosts[0].Name, movement.NextPosition(ghosts[0].Position));
+                    Thread.Sleep(100);
+                } while (board[ghosts[0].Position.Row, ghosts[0].Position.Column].node == false && movement.PossibleShift(movement.NextPosition(ghosts[0].Position)) == true);
+            } while (pacman.Position.GhostEating(ghosts) == false);
         }
         public void DecreaseLives()
         {
@@ -421,6 +500,7 @@ namespace PacmanWish
             {
                 board[16, i].wall = true;
             }
+            board[13, 10].wall = false;
 
             //miroir
             for (int i = 0; i < board.GetLength(0); i++)
@@ -437,7 +517,7 @@ namespace PacmanWish
             {
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    bool maison = (j >= 11 && j <= 16 && i >= 13 && i <= 15) || (i == 12 && j >= 13 && j <= 14);
+                    bool maison = (j >= 10 && j <= 17 && i >= 13 && i <= 15) || (i == 12 && j >= 13 && j <= 14);
                     if (board[i, j].wall == false && board[i, j].pacmanHere == false && maison == false)
                     {
                         board[i, j].coin = true;
@@ -451,7 +531,7 @@ namespace PacmanWish
             {
                 for (int j = 0; j < board.GetLength(1) / 2; j++)
                 {
-                    bool nodesHere = (i == 4 && (j == 7 || j == 9 || j == 12)) || (i == 6 && j == 4) || (i == 8 && (j == 9 || j == 12)) || (i == 9 && j == 4) || (i == 11 && (j == 6 || j == 9 || j == 13)) || (i == 14 && (j == 1 || j == 4)) || (i == 15 && j == 13) || (i == 17 && (j == 6 || j == 9 || j == 12)) || (i == 20 && (j == 3 || j == 6)) || (i == 23 && (j == 9 || j == 12)) || (i == 26 && (j == 1 || j == 6));
+                    bool nodesHere = (i == 4 && (j == 7 || j == 9 || j == 12)) || (i == 6 && j == 4) || (i == 8 && (j == 9 || j == 12)) || (i == 9 && j == 4) || (i == 11 && (j == 6 || j == 9)) || (i == 14 && (j == 1 || j == 4)) || (i == 15 && j == 13) || (i == 17 && (j == 6 || j == 9 || j == 12)) || (i == 20 && (j == 3 || j == 6)) || (i == 23 && (j == 9 || j == 12)) || (i == 26 && (j == 1 || j == 6));
                     if (nodesHere == true)
                     {
                         board[i, j].node = true;
@@ -459,6 +539,7 @@ namespace PacmanWish
                     }
                 }
             }
+            
 
         }
         public void DisplayBoard()
@@ -467,12 +548,12 @@ namespace PacmanWish
             {
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    DisplayTile(board[i,j]);
+                    DisplayTile(board[i,j],i,j);
                 }
                 Console.Write("\n");
             }
         }
-        public void DisplayTile(Tile tile)
+        public void DisplayTile(Tile tile,int i, int j)
         {
             /*
             if(tile.node)
@@ -482,7 +563,35 @@ namespace PacmanWish
                 Console.BackgroundColor = ConsoleColor.Black;
             }
             else */
-            if(tile.wall)
+            if (tile.ghostHere)
+            {
+                if (ghosts[0].Position.Row == i && ghosts[0].Position.Column == j)
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkMagenta;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.Write(" G ");
+                }
+                if (ghosts[1].Position.Row == i && ghosts[1].Position.Column == j)
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.Write(" G ");
+                }
+                if (ghosts[2].Position.Row == i && ghosts[2].Position.Column == j)
+                {
+                    Console.BackgroundColor = ConsoleColor.Magenta;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.Write(" G ");
+                }
+                if (ghosts[3].Position.Row == i && ghosts[3].Position.Column == j)
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkRed;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.Write(" G ");
+                }
+
+            }
+            else if (tile.wall)
             {
                 Console.BackgroundColor = ConsoleColor.Blue;
                 Console.Write("   ");
@@ -499,12 +608,6 @@ namespace PacmanWish
                 Console.BackgroundColor = ConsoleColor.Yellow;
                 Console.ForegroundColor = ConsoleColor.Black;
                 Console.Write("Pac");
-            }
-            else if (tile.ghostHere)
-            {
-                Console.BackgroundColor = ConsoleColor.DarkMagenta;
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.Write(" G ");
             }
             else
             {
