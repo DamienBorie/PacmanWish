@@ -130,6 +130,10 @@ namespace PacmanWish
             }
             DecreaseLives();
         }
+        public void GhostBehavior()
+        {
+
+        }
         public void DecreaseLives()
         {
             if(lives>1)
