@@ -11,7 +11,7 @@ namespace PacmanWish
         public int Row { get; set; }
         public int Column { get; set; }
 
-        public Position(int row = 13, int column = 14)
+        public Position(int row = 14, int column = 14)
         {
             Row = row;
             Column = column;

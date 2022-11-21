@@ -11,23 +11,31 @@ namespace PacmanWish
 {
     public class GameManager
     {
+        #region attributes
         private int lives { get; set; }
         private int score { get; set; }
         public Pacman pacman { get; set; }
         public Ghost[] ghosts { get; set; }
 
         public static Tile[,] board = new Tile[31, 28]; // static argument not definitive
+        #endregion
+
+        #region properties
         public Tile[,] Board
         {
             get { return board; }
             set { board = value; }
         }
+        #endregion
+
+        #region constructor
         public GameManager()
         {
             pacman = new Pacman();
             ghosts = new Ghost[] { new Ghost("ghost1"), new Ghost("ghost2"), new Ghost("ghost3"), new Ghost("ghost4") };
             NewGame();
         }
+        #endregion
         public void NewGame()
         {
             lives = 3; 
@@ -40,38 +48,38 @@ namespace PacmanWish
         {
             SetPosition(pacman.Name, new Position(17, 14));
             SetPosition(ghosts[0].Name, new Position(13, 12));
-            SetPosition(ghosts[0].Name, new Position(13, 13));
-            SetPosition(ghosts[0].Name, new Position(13, 14));
-            SetPosition(ghosts[0].Name, new Position(13, 15));
+            SetPosition(ghosts[1].Name, new Position(13, 13));
+            SetPosition(ghosts[2].Name, new Position(13, 14));
+            SetPosition(ghosts[3].Name, new Position(13, 15));
         }
-        public void SetPosition(string name, Position position)
+        public void SetPosition(string name, Position newPosition)
         {
-            switch(name)
+            switch (name)
             {
                 case "pacman":
                     board[pacman.Position.Row, pacman.Position.Column].pacmanHere = false;
-                    pacman.Position = position;
-                    board[position.Row, position.Column].pacmanHere = true;
+                    pacman.Position = newPosition;
+                    board[newPosition.Row, newPosition.Column].pacmanHere = true;
                     break;
                 case "ghost1":
-                    board[ghosts[0].Position.Row, ghosts[0].Position.Column].pacmanHere = false;
-                    ghosts[0].Position = position;
-                    board[position.Row, position.Column].ghostHere = true;
+                    board[ghosts[0].Position.Row, ghosts[0].Position.Column].ghostHere = false;
+                    ghosts[0].Position = newPosition;
+                    board[newPosition.Row, newPosition.Column].ghostHere = true;
                     break;
                 case "ghost2":
-                    board[ghosts[1].Position.Row, ghosts[1].Position.Column].pacmanHere = false;
-                    ghosts[1].Position = position;
-                    board[position.Row, position.Column].ghostHere = true;
+                    board[ghosts[1].Position.Row, ghosts[1].Position.Column].ghostHere = false;
+                    ghosts[1].Position = newPosition;
+                    board[newPosition.Row, newPosition.Column].ghostHere = true;
                     break;
                 case "ghost3":
-                    board[ghosts[2].Position.Row, ghosts[2].Position.Column].pacmanHere = false;
-                    ghosts[2].Position = position;
-                    board[position.Row, position.Column].ghostHere = true;
+                    board[ghosts[2].Position.Row, ghosts[2].Position.Column].ghostHere = false;
+                    ghosts[2].Position = newPosition;
+                    board[newPosition.Row, newPosition.Column].ghostHere = true;
                     break;
                 case "ghost4":
-                    board[ghosts[3].Position.Row, ghosts[3].Position.Column].pacmanHere = false;
-                    ghosts[3].Position = position;
-                    board[position.Row, position.Column].ghostHere = true;
+                    board[ghosts[3].Position.Row, ghosts[3].Position.Column].ghostHere = false;
+                    ghosts[3].Position = newPosition;
+                    board[newPosition.Row, newPosition.Column].ghostHere = true;
                     break;
             }
         }
@@ -80,8 +88,45 @@ namespace PacmanWish
             while (pacman.Position.GhostEating(ghosts) == false)
             {
                 Console.Clear();
+                Console.WriteLine("Score : " + score + "\nLives : " + lives + "\n");
                 DisplayBoard();
-                Console.ReadLine();
+
+                //Ghosts
+
+
+                //Pacman
+                ConsoleKeyInfo cki = new ConsoleKeyInfo();
+                Movement movement = new Movement(' ');
+                do
+                {
+                    do
+                    {
+                        cki = Console.ReadKey(true);
+                        if (cki.Key == ConsoleKey.LeftArrow || cki.Key == ConsoleKey.Q)
+                        {
+                            movement.direction = 'q';
+                        }
+                        if (cki.Key == ConsoleKey.RightArrow || cki.Key == ConsoleKey.D)
+                        {
+                            movement.direction = 'd';
+                        }
+                        if (cki.Key == ConsoleKey.DownArrow || cki.Key == ConsoleKey.S)
+                        {
+                            movement.direction = 's';
+                        }
+                        if (cki.Key == ConsoleKey.UpArrow || cki.Key == ConsoleKey.Z)
+                        {
+                            movement.direction = 'z';
+                        }
+
+                    } while ((movement.direction != 'z') && (movement.direction != 'q') && (movement.direction != 's') && (movement.direction != 'd'));
+
+                } while (movement.PossibleShift(movement.NextPosition(pacman.Position)) == false);
+
+                SetPosition("pacman", movement.NextPosition(pacman.Position));
+                score += AddScore(pacman.Position);
+                if (RemainingCoin() == false) 
+                    NewBoard();
             }
             DecreaseLives();
         }
@@ -103,10 +148,42 @@ namespace PacmanWish
                 NewGame();
             }
         }
+        //when you loose a life we re start without reseting the board
         public void NewRound()
         {
             SetDefaultPosition();
             LoopPlayer();
+        }
+        //when all coin are taken we take a new board
+        public void NewBoard()
+        {
+            InitBoard();
+            SetDefaultPosition();
+        }
+        public int AddScore(Position position)
+        {
+            if (board[position.Row, position.Column].coin == true)
+            {
+                board[position.Row, position.Column].coin = false;
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        public bool RemainingCoin()
+        {
+            bool coin = false;
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (int j = 0; j < board.GetLength(1); j++)
+                {
+                    if (board[i, j].coin == true) 
+                        coin = true;
+                }
+            }
+            return coin;
         }
         public void InitBoard()
         {
@@ -393,6 +470,14 @@ namespace PacmanWish
         }
         public void DisplayTile(Tile tile)
         {
+            /*
+            if(tile.node)
+            {
+                Console.BackgroundColor = ConsoleColor.Green;
+                Console.Write("   ");
+                Console.BackgroundColor = ConsoleColor.Black;
+            }
+            else */
             if(tile.wall)
             {
                 Console.BackgroundColor = ConsoleColor.Blue;
