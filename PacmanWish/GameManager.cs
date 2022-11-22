@@ -19,6 +19,13 @@ namespace PacmanWish
         public Ghost[] ghosts { get; set; }
 
         public static Tile[,] board = new Tile[31, 28]; // static argument not definitive
+
+        public static List<Writings> ElementToWrite = new List<Writings>();
+
+        public Thread Th_Ghost1 = null;
+        public Thread Th_Ghost2 = null;
+        public Thread Th_Ghost3 = null;
+        public Thread Th_Ghost4 = null;
         #endregion
 
         #region properties
@@ -42,16 +49,33 @@ namespace PacmanWish
             lives = 3; 
             score = 0;
             InitBoard();
+            DisplayBoard();
+            new Thread(ThreadWriting).Start();
             SetDefaultPosition();
             LoopPlayer();
+        }
+        public void ThreadWriting()
+        {
+            while(true)
+            {
+                Thread.Sleep(2);
+                var count = ElementToWrite.Count();
+                if (count > 0)
+                {
+                    UpdatePos(ElementToWrite[0].Name, ElementToWrite[0].NewPosition, ElementToWrite[0].OldPosition);
+                    if (count > 0)
+                        ElementToWrite.RemoveAt(0);
+
+                }
+            }
         }
         public void SetDefaultPosition()
         {
             SetPosition(pacman.Name, new Position(17, 14));
-            SetPosition(ghosts[0].Name, new Position(13, 12));
-            SetPosition(ghosts[1].Name, new Position(13, 13));
-            SetPosition(ghosts[2].Name, new Position(13, 14));
-            SetPosition(ghosts[3].Name, new Position(13, 15));
+            SetPosition(ghosts[0].Name, new Position(13, 11));
+            SetPosition(ghosts[1].Name, new Position(15, 12));
+            SetPosition(ghosts[2].Name, new Position(15, 15));
+            SetPosition(ghosts[3].Name, new Position(13, 16));
         }
         public void SetPosition(string name, Position newPosition)
         {
@@ -59,26 +83,31 @@ namespace PacmanWish
             {
                 case "pacman":
                     board[pacman.Position.Row, pacman.Position.Column].pacmanHere = false;
+                    ElementToWrite.Add(new Writings(pacman.Name, newPosition,pacman.Position));
                     pacman.Position = newPosition;
                     board[newPosition.Row, newPosition.Column].pacmanHere = true;
                     break;
                 case "ghost1":
                     board[ghosts[0].Position.Row, ghosts[0].Position.Column].ghostHere = false;
+                    ElementToWrite.Add(new Writings(ghosts[0].Name, newPosition, ghosts[0].Position));
                     ghosts[0].Position = newPosition;
                     board[newPosition.Row, newPosition.Column].ghostHere = true;
                     break;
                 case "ghost2":
                     board[ghosts[1].Position.Row, ghosts[1].Position.Column].ghostHere = false;
+                    ElementToWrite.Add(new Writings(ghosts[1].Name, newPosition, ghosts[1].Position));
                     ghosts[1].Position = newPosition;
                     board[newPosition.Row, newPosition.Column].ghostHere = true;
                     break;
                 case "ghost3":
                     board[ghosts[2].Position.Row, ghosts[2].Position.Column].ghostHere = false;
+                    ElementToWrite.Add(new Writings(ghosts[2].Name, newPosition, ghosts[2].Position));
                     ghosts[2].Position = newPosition;
                     board[newPosition.Row, newPosition.Column].ghostHere = true;
                     break;
                 case "ghost4":
                     board[ghosts[3].Position.Row, ghosts[3].Position.Column].ghostHere = false;
+                    ElementToWrite.Add(new Writings(ghosts[3].Name, newPosition, ghosts[3].Position));
                     ghosts[3].Position = newPosition;
                     board[newPosition.Row, newPosition.Column].ghostHere = true;
                     break;
@@ -86,19 +115,25 @@ namespace PacmanWish
         }
         public void LoopPlayer()
         {
-            DisplayBoard();
+
+            //DisplayBoard();
+            //DisplayScore();
             //Start Ghosts thread
-            new Thread(GhostBehavior1).Start();
-            new Thread(GhostBehavior2).Start();
-            new Thread(GhostBehavior3).Start();
-            new Thread(GhostBehavior4).Start();
+            Th_Ghost1 = new Thread(GhostBehavior1);
+            Th_Ghost1.Start();
+            Th_Ghost2 = new Thread(GhostBehavior2);
+            Th_Ghost2.Start();
+            Th_Ghost3 = new Thread(GhostBehavior3);
+            Th_Ghost3.Start();
+            Th_Ghost4 = new Thread(GhostBehavior4);
+            Th_Ghost4.Start();
 
             while (pacman.Position.GhostEating(ghosts) == false)
             {
-                Console.Clear();
-                DisplayBoard();
-                DisplayScore();
-
+                //Console.Clear();
+                //DisplayBoard();
+                //DisplayScore();
+                
                 //Pacman
                 ConsoleKeyInfo cki = new ConsoleKeyInfo();
                 Movement movement = new Movement(' ');
@@ -152,7 +187,7 @@ namespace PacmanWish
                 do
                 {
                     SetPosition(ghosts[3].Name, movement.NextPosition(ghosts[3].Position));
-                    Thread.Sleep(600);
+                    Thread.Sleep(713);
                 } while (board[ghosts[3].Position.Row, ghosts[3].Position.Column].node == false && movement.PossibleShift(movement.NextPosition(ghosts[3].Position)) == true);
             } while (pacman.Position.GhostEating(ghosts) == false);
         }
@@ -173,7 +208,7 @@ namespace PacmanWish
                 do
                 {
                     SetPosition(ghosts[2].Name, movement.NextPosition(ghosts[2].Position));
-                    Thread.Sleep(500);
+                    Thread.Sleep(587);
                 } while (board[ghosts[2].Position.Row, ghosts[2].Position.Column].node == false && movement.PossibleShift(movement.NextPosition(ghosts[2].Position)) == true);
             } while (pacman.Position.GhostEating(ghosts) == false);
         }
@@ -195,7 +230,7 @@ namespace PacmanWish
                 do
                 {
                     SetPosition(ghosts[1].Name, movement.NextPosition(ghosts[1].Position));
-                    Thread.Sleep(400);
+                    Thread.Sleep(498);
                 } while (board[ghosts[1].Position.Row, ghosts[1].Position.Column].node == false && movement.PossibleShift(movement.NextPosition(ghosts[1].Position)) == true);
             } while (pacman.Position.GhostEating(ghosts) == false);
         }
@@ -216,7 +251,7 @@ namespace PacmanWish
                 do
                 {
                     SetPosition(ghosts[0].Name, movement.NextPosition(ghosts[0].Position));
-                    Thread.Sleep(300);
+                    Thread.Sleep(405);
                 } while (board[ghosts[0].Position.Row, ghosts[0].Position.Column].node == false && movement.PossibleShift(movement.NextPosition(ghosts[0].Position)) == true);
             } while (pacman.Position.GhostEating(ghosts) == false);
         }
@@ -229,11 +264,13 @@ namespace PacmanWish
             }
             else
             {
+                lives--;
+                KillThreads();
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("GAME OVER");
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Your score is : " + score);
+                DisplayScore();
                 Console.WriteLine("press any key to start a new game");
                 Console.ReadKey();
                 NewGame();
@@ -243,7 +280,20 @@ namespace PacmanWish
         public void NewRound()
         {
             SetDefaultPosition();
+            Thread.Sleep(10);
+            KillThreads();
             LoopPlayer();
+        }
+        public void KillThreads()
+        {
+            if (Th_Ghost1 != null)
+                Th_Ghost1.Abort();
+            if (Th_Ghost2 != null)
+                Th_Ghost2.Abort();
+            if (Th_Ghost3 != null)
+                Th_Ghost3.Abort();
+            if (Th_Ghost4 != null)
+                Th_Ghost4.Abort();
         }
         //when all coin are taken we take a new board
         public void NewBoard()
@@ -566,7 +616,57 @@ namespace PacmanWish
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Score : " + score);
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Lives : " + lives);
+            if(lives >0)
+                Console.WriteLine("Lives : " + lives);
+        }
+        public void UpdatePos(string name,Position newPosition, Position oldPosition)
+        {
+            switch (name)
+            {
+                case "pacman":
+                    Console.SetCursorPosition((oldPosition.Column) * 3, oldPosition.Row);
+                    DisplayTile(new Tile(false, false, false, false, false), oldPosition.Row, oldPosition.Column);
+                    Console.SetCursorPosition((newPosition.Column) * 3, newPosition.Row);
+                    DisplayTile(new Tile(false, false, false, false, true), newPosition.Row, newPosition.Column);
+                    break;
+                case "ghost1":
+                    Console.SetCursorPosition((oldPosition.Column) * 3, oldPosition.Row);
+                    if (board[oldPosition.Row, oldPosition.Column].coin)
+                        DisplayTile(new Tile(false, true, false, false, false), oldPosition.Row, oldPosition.Column);
+                    else
+                        DisplayTile(new Tile(false, false, false, false, false), oldPosition.Row, oldPosition.Column);
+                    Console.SetCursorPosition((newPosition.Column) * 3, newPosition.Row);
+                    DisplayTile(new Tile(false, false, false, true, false), ghosts[0].Position.Row, ghosts[0].Position.Column);
+                    break;
+                case "ghost2":
+                    Console.SetCursorPosition((oldPosition.Column) * 3, oldPosition.Row);
+                    if (board[oldPosition.Row, oldPosition.Column].coin)
+                        DisplayTile(new Tile(false, true, false, false, false), oldPosition.Row, oldPosition.Column);
+                    else
+                        DisplayTile(new Tile(false, false, false, false, false), oldPosition.Row, oldPosition.Column);
+                    Console.SetCursorPosition((newPosition.Column) * 3, newPosition.Row);
+                    DisplayTile(new Tile(false, false, false, true, false), ghosts[1].Position.Row, ghosts[1].Position.Column);
+                    break;
+                case "ghost3":
+                    Console.SetCursorPosition((oldPosition.Column) * 3, oldPosition.Row);
+                    if (board[oldPosition.Row, oldPosition.Column].coin)
+                        DisplayTile(new Tile(false, true, false, false, false), oldPosition.Row, oldPosition.Column);
+                    else
+                        DisplayTile(new Tile(false, false, false, false, false), oldPosition.Row, oldPosition.Column);
+                    Console.SetCursorPosition((newPosition.Column) * 3, newPosition.Row);
+                    DisplayTile(new Tile(false, false, false, true, false), ghosts[2].Position.Row, ghosts[2].Position.Column);
+                    break;
+                case "ghost4":
+                    Console.SetCursorPosition((oldPosition.Column) * 3, oldPosition.Row);
+                    if (board[oldPosition.Row, oldPosition.Column].coin)
+                        DisplayTile(new Tile(false, true, false, false, false), oldPosition.Row, oldPosition.Column);
+                    else
+                        DisplayTile(new Tile(false, false, false, false, false), oldPosition.Row, oldPosition.Column);
+                    Console.SetCursorPosition((newPosition.Column) * 3, newPosition.Row);
+                    DisplayTile(new Tile(false, false, false, true, false), ghosts[3].Position.Row, ghosts[3].Position.Column);
+                    break;
+                default: break;
+            }
         }
         public void DisplayTile(Tile tile,int i, int j)
         {
@@ -585,24 +685,28 @@ namespace PacmanWish
                     Console.BackgroundColor = ConsoleColor.DarkMagenta;
                     Console.ForegroundColor = ConsoleColor.Black;
                     Console.Write(" G ");
+                    Console.BackgroundColor = ConsoleColor.Black;
                 }
                 if (ghosts[1].Position.Row == i && ghosts[1].Position.Column == j)
                 {
                     Console.BackgroundColor = ConsoleColor.Red;
                     Console.ForegroundColor = ConsoleColor.Black;
                     Console.Write(" G ");
+                    Console.BackgroundColor = ConsoleColor.Black;
                 }
                 if (ghosts[2].Position.Row == i && ghosts[2].Position.Column == j)
                 {
                     Console.BackgroundColor = ConsoleColor.Magenta;
                     Console.ForegroundColor = ConsoleColor.Black;
                     Console.Write(" G ");
+                    Console.BackgroundColor = ConsoleColor.Black;
                 }
                 if (ghosts[3].Position.Row == i && ghosts[3].Position.Column == j)
                 {
                     Console.BackgroundColor = ConsoleColor.DarkRed;
                     Console.ForegroundColor = ConsoleColor.Black;
                     Console.Write(" G ");
+                    Console.BackgroundColor = ConsoleColor.Black;
                 }
 
             }
@@ -610,6 +714,7 @@ namespace PacmanWish
             {
                 Console.BackgroundColor = ConsoleColor.Blue;
                 Console.Write("   ");
+                Console.BackgroundColor = ConsoleColor.Black;
                 Console.BackgroundColor = ConsoleColor.Black;
             }
             else if (tile.coin)
@@ -623,6 +728,7 @@ namespace PacmanWish
                 Console.BackgroundColor = ConsoleColor.Yellow;
                 Console.ForegroundColor = ConsoleColor.Black;
                 Console.Write("Pac");
+                Console.BackgroundColor = ConsoleColor.Black;
             }
             else
             {
