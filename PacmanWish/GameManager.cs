@@ -86,6 +86,7 @@ namespace PacmanWish
         }
         public void LoopPlayer()
         {
+            DisplayBoard();
             //Start Ghosts thread
             new Thread(GhostBehavior1).Start();
             new Thread(GhostBehavior2).Start();
@@ -95,8 +96,8 @@ namespace PacmanWish
             while (pacman.Position.GhostEating(ghosts) == false)
             {
                 Console.Clear();
-                Console.WriteLine("Score : " + score + "\nLives : " + lives + "\n");
                 DisplayBoard();
+                DisplayScore();
 
                 //Pacman
                 ConsoleKeyInfo cki = new ConsoleKeyInfo();
@@ -559,6 +560,13 @@ namespace PacmanWish
                 }
                 Console.Write("\n");
             }
+        }
+        public void DisplayScore()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Score : " + score);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Lives : " + lives);
         }
         public void DisplayTile(Tile tile,int i, int j)
         {
