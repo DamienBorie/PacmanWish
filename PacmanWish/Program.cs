@@ -11,6 +11,7 @@ namespace PacmanWish
         static void Main(string[] args)
         {
             Console.SetWindowSize(Console.LargestWindowWidth/2, Console.LargestWindowHeight - Console.LargestWindowHeight/4);
+            Console.CursorVisible = false;
             GameManager game = new GameManager();
         }
     }

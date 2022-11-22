@@ -10,11 +10,13 @@ namespace PacmanWish
     {
         public string Name { get; set; }
         public Position Position { get; set; }
+        public char Direction { get; set; }
 
-        public Ghost(string name)
+        public Ghost(string name, char direction)
         {
             Name = name;
             Position = new Position();
+            Direction = direction;
         }
     }
 }

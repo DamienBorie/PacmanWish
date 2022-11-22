@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace PacmanWish
 {
@@ -32,7 +33,7 @@ namespace PacmanWish
         public GameManager()
         {
             pacman = new Pacman();
-            ghosts = new Ghost[] { new Ghost("ghost1"), new Ghost("ghost2"), new Ghost("ghost3"), new Ghost("ghost4") };
+            ghosts = new Ghost[] { new Ghost("ghost1",'d'), new Ghost("ghost2",'s'), new Ghost("ghost3", 's'), new Ghost("ghost4", 'q') };
             NewGame();
         }
         #endregion
@@ -140,16 +141,17 @@ namespace PacmanWish
             char[] directions = { 'z', 'q', 's', 'd' };
             do
             {
+                int choice = 0;
                 do
                 {
-                    movement.direction = directions[rdm.Next(4)];
-                } while (movement.PossibleShift(movement.NextPosition(ghosts[3].Position)) == false);
-
+                    choice = rdm.Next(4);
+                    movement.direction = directions[choice];
+                } while (movement.PossibleShift(movement.NextPosition(ghosts[3].Position)) == false || (ghosts[3].Direction == directions[(choice + 2) % 4]));
+                ghosts[3].Direction = movement.direction;
                 do
                 {
-                    //Console.WriteLine(ghosts[0].Name + " : " + movement.direction + " : " + ghosts[0].Position.Row + " ; " + ghosts[0].Position.Column);
                     SetPosition(ghosts[3].Name, movement.NextPosition(ghosts[3].Position));
-                    Thread.Sleep(200);
+                    Thread.Sleep(600);
                 } while (board[ghosts[3].Position.Row, ghosts[3].Position.Column].node == false && movement.PossibleShift(movement.NextPosition(ghosts[3].Position)) == true);
             } while (pacman.Position.GhostEating(ghosts) == false);
         }
@@ -160,16 +162,17 @@ namespace PacmanWish
             char[] directions = { 'z', 'q', 's', 'd' };
             do
             {
+                int choice = 0;
                 do
                 {
-                    movement.direction = directions[rdm.Next(4)];
-                } while (movement.PossibleShift(movement.NextPosition(ghosts[2].Position)) == false);
-
+                    choice = rdm.Next(4);
+                    movement.direction = directions[choice];
+                } while (movement.PossibleShift(movement.NextPosition(ghosts[2].Position)) == false || (ghosts[2].Direction == directions[(choice + 2) % 4]));
+                ghosts[2].Direction = movement.direction;
                 do
                 {
-                    //Console.WriteLine(ghosts[0].Name + " : " + movement.direction + " : " + ghosts[0].Position.Row + " ; " + ghosts[0].Position.Column);
                     SetPosition(ghosts[2].Name, movement.NextPosition(ghosts[2].Position));
-                    Thread.Sleep(300);
+                    Thread.Sleep(500);
                 } while (board[ghosts[2].Position.Row, ghosts[2].Position.Column].node == false && movement.PossibleShift(movement.NextPosition(ghosts[2].Position)) == true);
             } while (pacman.Position.GhostEating(ghosts) == false);
         }
@@ -180,14 +183,16 @@ namespace PacmanWish
             char[] directions = { 'z', 'q', 's', 'd' };
             do
             {
+                int choice = 0;
                 do
                 {
-                    movement.direction = directions[rdm.Next(4)];
-                } while (movement.PossibleShift(movement.NextPosition(ghosts[1].Position)) == false);
+                    choice = rdm.Next(4);
+                    movement.direction = directions[choice];
+                } while (movement.PossibleShift(movement.NextPosition(ghosts[1].Position)) == false || (ghosts[1].Direction == directions[(choice + 2) % 4]));
+                ghosts[1].Direction = movement.direction;
 
                 do
                 {
-                    //Console.WriteLine(ghosts[0].Name + " : " + movement.direction + " : " + ghosts[0].Position.Row + " ; " + ghosts[0].Position.Column);
                     SetPosition(ghosts[1].Name, movement.NextPosition(ghosts[1].Position));
                     Thread.Sleep(400);
                 } while (board[ghosts[1].Position.Row, ghosts[1].Position.Column].node == false && movement.PossibleShift(movement.NextPosition(ghosts[1].Position)) == true);
@@ -200,16 +205,17 @@ namespace PacmanWish
             char[] directions = { 'z', 'q', 's', 'd' };
             do
             {
+                int choice = 0;
                 do
                 {
-                    movement.direction = directions[rdm.Next(4)];
-                } while (movement.PossibleShift(movement.NextPosition(ghosts[0].Position)) == false);
-
+                    choice = rdm.Next(4);
+                    movement.direction = directions[choice];
+                } while (movement.PossibleShift(movement.NextPosition(ghosts[0].Position)) == false || (ghosts[0].Direction == directions[(choice+2)%4]));
+                ghosts[0].Direction = movement.direction;
                 do
                 {
-                    //Console.WriteLine(ghosts[0].Name + " : " + movement.direction + " : " + ghosts[0].Position.Row + " ; " + ghosts[0].Position.Column);
                     SetPosition(ghosts[0].Name, movement.NextPosition(ghosts[0].Position));
-                    Thread.Sleep(100);
+                    Thread.Sleep(300);
                 } while (board[ghosts[0].Position.Row, ghosts[0].Position.Column].node == false && movement.PossibleShift(movement.NextPosition(ghosts[0].Position)) == true);
             } while (pacman.Position.GhostEating(ghosts) == false);
         }
@@ -226,6 +232,7 @@ namespace PacmanWish
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("GAME OVER");
                 Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Your score is : " + score);
                 Console.WriteLine("press any key to start a new game");
                 Console.ReadKey();
                 NewGame();
