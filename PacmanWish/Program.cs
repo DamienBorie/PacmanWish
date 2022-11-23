@@ -10,9 +10,12 @@ namespace PacmanWish
     {
         static void Main(string[] args)
         {
+            // console params to get a smoother game
             Console.SetWindowSize(84, 35);
             Console.CursorVisible = false;
-            GameManager game = new GameManager();
+
+            // launch game
+            GameManager game = new GameManager(); 
         }
     }
 }

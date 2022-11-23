@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace PacmanWish
 {
-    public class Writings
+    public class WritingsPos
     {
         public string Name { get; private set; }
         public Position NewPosition { get; set; }
         public Position OldPosition { get; set; }
-        public Writings(string name, Position newPosition, Position oldPosition)
+        public WritingsPos(string name, Position newPosition, Position oldPosition)
         {
             Name = name;
             NewPosition = newPosition;

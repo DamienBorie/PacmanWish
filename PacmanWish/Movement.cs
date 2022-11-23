@@ -9,15 +9,15 @@ namespace PacmanWish
 {
     public class Movement
     {
-        public char direction { get; set; }
+        public char Direction { get; set; }
 
         public Movement(char direction)
         {
-            this.direction = direction;
+            this.Direction = direction;
         }
         public Position NextPosition(Position CurrentPosition)
         {
-            switch(this.direction)
+            switch(this.Direction)
             {
                 case 'z':
                     return new Position(CurrentPosition.Row - 1, CurrentPosition.Column);
@@ -33,7 +33,7 @@ namespace PacmanWish
         }
         public bool PossibleShift(Position position)
         {
-            if (GameManager.board[position.Row, position.Column].wall)
+            if (GameManager.board[position.Row, position.Column].Wall)
             {
                 return false;
             }

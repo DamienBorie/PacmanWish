@@ -8,19 +8,19 @@ namespace PacmanWish
 {
     public class Tile
     {
-        public bool node { get; set; }
-        public bool coin { get; set; }
-        public bool wall { get; set; }
-        public bool ghostHere { get; set; }
-        public bool pacmanHere { get; set; }
+        public bool Node { get; set; }
+        public bool Coin { get; set; }
+        public bool Wall { get; set; }
+        public bool GhostHere { get; set; }
+        public bool PacmanHere { get; set; }
 
         public Tile(bool node = false, bool coin = false, bool wall = false, bool ghostHere = false, bool pacmanHere = false)
         {
-            this.node = node;
-            this.coin = coin;
-            this.wall = wall;
-            this.ghostHere = ghostHere;
-            this.pacmanHere = pacmanHere;
+            Node = node;
+            Coin = coin;
+            Wall = wall;
+            GhostHere = ghostHere;
+            PacmanHere = pacmanHere;
         }
     }
 }
