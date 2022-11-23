@@ -140,7 +140,7 @@ namespace PacmanWish
                     ElementToWrite.RemoveAt(0);
                     UpdateScore_Lives();
                 }
-                if(timer >600)
+                if(timer >500)
                 {
                     Console.Clear();
                     DisplayBoard();
@@ -175,11 +175,10 @@ namespace PacmanWish
                         {
                             movement.Direction = 'z';
                         }
-
                     } while ((movement.Direction != 'z') && (movement.Direction != 'q') && (movement.Direction != 's') && (movement.Direction != 'd'));
                         
                 } while (movement.PossibleShift(movement.NextPosition(Pacman.Position)) == false);
-
+                
                 SetPosition("pacman", movement.NextPosition(Pacman.Position));
 
                 AddScore(Pacman.Position);
