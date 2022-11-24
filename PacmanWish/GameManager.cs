@@ -29,10 +29,11 @@ namespace PacmanWish
         public Thread Th_Ghost3 = null;
         public Thread Th_Ghost4 = null;
 
+        public static Random rdm = new Random();
+
         // writing thread with cursor set
         public Thread WritingThread = null;
         #endregion
-
         #region properties
         public Tile[,] Board
         {
@@ -40,7 +41,6 @@ namespace PacmanWish
             set { board = value; }
         }
         #endregion
-
         #region constructor
         public GameManager()
         {
@@ -136,7 +136,7 @@ namespace PacmanWish
                 var count = ElementToWrite.Count();
                 if (count > 0)
                 {
-                    UpdatePos(ElementToWrite[0].Name, ElementToWrite[0].NewPosition, ElementToWrite[0].OldPosition);
+                    UpdatePos(ElementToWrite[0].NewPosition, ElementToWrite[0].OldPosition);
                     ElementToWrite.RemoveAt(0);
                     UpdateScore_Lives();
                 }
@@ -208,7 +208,7 @@ namespace PacmanWish
                     Pacman.Position = newPosition;
                     board[newPosition.Row, newPosition.Column].PacmanHere = true;
 
-                    ElementToWrite.Add(new WritingsPos(Pacman.Name, newPosition, oldPosition));
+                    ElementToWrite.Add(new WritingsPos(newPosition, oldPosition));
                     break;
 
                 case "ghost1":
@@ -218,7 +218,7 @@ namespace PacmanWish
                     Ghosts[0].Position = newPosition;
                     board[newPosition.Row, newPosition.Column].GhostHere = true;
 
-                    ElementToWrite.Add(new WritingsPos(Ghosts[0].Name, newPosition, oldPosition));
+                    ElementToWrite.Add(new WritingsPos(newPosition, oldPosition));
                     break;
 
                 case "ghost2":
@@ -228,7 +228,7 @@ namespace PacmanWish
                     Ghosts[1].Position = newPosition;
                     board[newPosition.Row, newPosition.Column].GhostHere = true;
 
-                    ElementToWrite.Add(new WritingsPos(Ghosts[1].Name, newPosition, oldPosition));
+                    ElementToWrite.Add(new WritingsPos(newPosition, oldPosition));
                     break;
 
                 case "ghost3":
@@ -238,7 +238,7 @@ namespace PacmanWish
                     Ghosts[2].Position = newPosition;
                     board[newPosition.Row, newPosition.Column].GhostHere = true;
 
-                    ElementToWrite.Add(new WritingsPos(Ghosts[2].Name, newPosition, oldPosition));
+                    ElementToWrite.Add(new WritingsPos(newPosition, oldPosition));
                     break;
 
                 case "ghost4":
@@ -248,7 +248,7 @@ namespace PacmanWish
                     Ghosts[3].Position = newPosition;
                     board[newPosition.Row, newPosition.Column].GhostHere = true;
 
-                    ElementToWrite.Add(new WritingsPos(Ghosts[3].Name, newPosition, oldPosition));
+                    ElementToWrite.Add(new WritingsPos(newPosition, oldPosition));
                     break;
             }
         }
@@ -265,7 +265,7 @@ namespace PacmanWish
 
             Th_Ghost4 = new Thread(GhostBehavior4);
             Th_Ghost4.Start(); 
-        }
+        }   
         public void GhostThread_Stop()
         {
             if (Th_Ghost1 != null)
@@ -280,7 +280,6 @@ namespace PacmanWish
             if (Th_Ghost4 != null)
                 Th_Ghost4.Abort();
         }
-        public static Random rdm = new Random();
         public void GhostBehavior4()
         {
             Movement movement = new Movement(' ');
@@ -675,7 +674,7 @@ namespace PacmanWish
                 Console.WriteLine("Lives : " + Lives);
             Console.ForegroundColor = ConsoleColor.White;
         }
-        public void UpdatePos(string name,Position newPosition, Position oldPosition)
+        public void UpdatePos(Position newPosition, Position oldPosition)
         {
             Console.SetCursorPosition((oldPosition.Column) * 3, oldPosition.Row);
             DisplayTile(Board[oldPosition.Row, oldPosition.Column], oldPosition.Row, oldPosition.Column);
